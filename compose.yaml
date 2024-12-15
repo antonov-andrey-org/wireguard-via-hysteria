@@ -44,7 +44,7 @@ services:
       - wgnet
     restart: always
     volumes:
-      - ./wireguard-ui/data:/app/db
+      - ./wireguard/ui/data:/app/db
       - ./wireguard/config:/etc/wireguard
 
 networks:
