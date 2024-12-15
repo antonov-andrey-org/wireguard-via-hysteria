@@ -4,7 +4,7 @@ services:
     container_name: hysteria2
     cap_add:
       - NET_ADMIN
-    command: server -c /etc/hysteria.yaml
+    command: server -c /etc/hysteria2.yaml
     networks:
       - wgnet
     ports:
@@ -12,7 +12,7 @@ services:
     restart: always
     volumes:
       - ./hysteria2/acme:/acme
-      - ./hysteria.yaml:/etc/hysteria.yaml:ro
+      - ./hysteria2.yaml:/etc/hysteria2.yaml:ro
 
   wireguard:
     image: linuxserver/wireguard:latest
