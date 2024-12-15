@@ -1,0 +1,56 @@
+services:
+  hysteria2:
+    image: tobyxdd/hysteria:latest
+    container_name: hysteria2
+    command: server -c /etc/hysteria.yaml
+    volumes:
+      - ./hysteria2/acme:/acme            # Persistent ACME cert storage
+      - ./hysteria.yaml:/etc/hysteria.yaml:ro
+    ports:
+      - "${HYSTERIA2_HTTP_PORT}:80/tcp"    # HTTP for ACME challenge
+      - "${HYSTERIA2_HTTPS_PORT}:443/tcp"  # HTTPS front-end
+      - "${HYSTERIA2_UDP_PORT}:${HYSTERIA2_UDP_PORT}/udp"  # UDP bridging
+    restart: always
+    networks:
+      - wgnet
+
+  wireguard:
+    image: linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv6.conf.all.disable_ipv6=0
+    environment:
+      - PUID=${WG_PUID}
+      - PGID=${WG_PGID}
+      - TZ=${WG_TZ}
+      - SERVERPORT=${WG_SERVERPORT}
+      - PEERS=${WG_PEERS}
+      - PEERDNS=${WG_PEERDNS}
+    volumes:
+      - ./wireguard/config:/config
+    depends_on:
+      - hysteria2
+    restart: always
+    networks:
+      - wgnet
+
+  wireguard-ui:
+    image: ngoduykhanh/wireguard-ui:latest
+    container_name: wireguard-ui
+    environment:
+      - WIREGUARD_UI_PORT=${WG_UI_PORT}
+    volumes:
+      - ./wireguard-ui/data:/data
+      - ./wireguard/config:/etc/wireguard
+    depends_on:
+      - wireguard
+    restart: always
+    networks:
+      - wgnet
+
+networks:
+  wgnet:
+    driver: bridge
