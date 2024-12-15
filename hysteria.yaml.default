@@ -1,29 +1,26 @@
-# hysteria.yaml
-
-listenTCP: ":443"
-listen: ":4000"
-obfs: "some-obfs-key"
-
-tls:
-  acme:
-    domains:
-      - wireguard.example.com   # Your domain
-    email: "admin@example.com"
-    provider: letsencrypt
+acme:
+  domains:
+    - wireguard.example.com
+  email: "admin@example.com"
+  ca: letsencrypt
+  dir: "/acme"
+  type: tls
 
 auth:
-  mode: password
-  config:
-    password: "mysecretpassword"
+  type: password
+  password: "mysecretpassword"
 
-upstreams:
-  # TCP reverse-proxy for wireguard-ui
-  - match:
-      alpn: ["http/1.1", "h2"]
-    dial: wireguard-ui:5000
-    protocol: tcp
+masquerade:
+  type: proxy
+  proxy:
+    url: http://wireguard-ui:80
+    rewriteHost: false
 
-  # UDP forwarding to wireguard container
-  - match: {}
-    dial: wireguard:51820
-    protocol: udp
+outbounds:
+  - name: wireguard
+    type: direct
+
+acl:
+  - inline:
+    - wireguard(all, udp/51820)
+    - direct(all)
