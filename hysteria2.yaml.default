@@ -12,6 +12,8 @@ auth:
 
 masquerade:
   type: proxy
+  listenHTTP: :80
+  listenHTTPS: :443
   proxy:
     url: http://wireguard-ui:80
     rewriteHost: false
@@ -21,6 +23,6 @@ outbounds:
     type: direct
 
 acl:
-  - inline:
+  inline:
     - wireguard(all, udp/51820)
     - direct(all)

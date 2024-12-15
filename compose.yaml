@@ -1,27 +1,27 @@
 services:
   hysteria2:
-    image: tobyxdd/hysteria:latest
     container_name: hysteria2
     cap_add:
       - NET_ADMIN
     command: server -c /etc/hysteria2.yaml
+    image: tobyxdd/hysteria:v2
     networks:
       - wgnet
     ports:
-      - "${HYSTERIA2_HTTPS_PORT}:443/tcp"
+      - "${HYSTERIA2_HTTP_PORT}:80"
+      - "${HYSTERIA2_HTTPS_PORT}:443"
     restart: always
     volumes:
-      - ./hysteria2/acme:/acme
+      - ./acme:/acme
       - ./hysteria2.yaml:/etc/hysteria2.yaml:ro
 
   wireguard:
-    image: linuxserver/wireguard:latest
     container_name: wireguard
     depends_on:
       - hysteria2
     cap_add:
       - NET_ADMIN
-      - SYS_MODULE
+    image: linuxserver/wireguard:latest
     networks:
       - wgnet
     ports:
@@ -34,10 +34,12 @@ services:
       - ./wireguard/config:/config
 
   wireguard-ui:
-    image: ngoduykhanh/wireguard-ui:latest
     container_name: wireguard-ui
     depends_on:
       - wireguard
+    expose:
+      - "5000/tcp"
+    image: ngoduykhanh/wireguard-ui:latest
     networks:
       - wgnet
     restart: always

@@ -1,7 +1,6 @@
 /.vscode/
-/hysteria2/
+/acme/
 /wireguard/
 /wireguard-ui/
 .env
-compose.yaml
-hysteria.yaml
+hysteria2.yaml
