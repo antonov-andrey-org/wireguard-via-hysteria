@@ -4,6 +4,8 @@ services:
     cap_add:
       - NET_ADMIN
     command: server -c /etc/hysteria2.yaml
+    env_file:
+      - .env
     image: tobyxdd/hysteria:v2
     networks:
       - wgnet
@@ -21,6 +23,8 @@ services:
       - hysteria2
     cap_add:
       - NET_ADMIN
+    env_file:
+      - .env
     image: linuxserver/wireguard:latest
     networks:
       - wgnet
@@ -35,6 +39,8 @@ services:
 
   wireguard-ui:
     container_name: wireguard-ui
+    env_file:
+      - .env
     depends_on:
       - wireguard
     expose:

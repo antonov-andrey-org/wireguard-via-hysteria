@@ -1,14 +1,14 @@
 acme:
   domains:
-    - wireguard.example.com
-  email: "admin@example.com"
+    - wireguard.example.com  # replace with your domain
+  email: "admin@example.com" # replace with your email
   ca: letsencrypt
   dir: "/acme"
   type: tls
 
 auth:
   type: password
-  password: "mysecretpassword"
+  password: "mysecretpassword" # replace with your password
 
 masquerade:
   type: proxy
