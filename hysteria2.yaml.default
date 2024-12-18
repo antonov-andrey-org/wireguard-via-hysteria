@@ -15,7 +15,7 @@ masquerade:
   listenHTTP: :80
   listenHTTPS: :443
   proxy:
-    url: http://wireguard-ui:5000
+    url: http://localhost:8123
     rewriteHost: false
 
 outbounds:
